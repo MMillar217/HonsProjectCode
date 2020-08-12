@@ -21,6 +21,26 @@
                 <li class="collection-item">Role: {{ role }}</li>
               </ul>
             </div>
+            <div v-if="isYou(email) || isAdmin">
+              <div class="list-group">
+                <ul class="collection">
+                  <li v-for="mute in mutes" v-bind:key="mute">
+                    {{ mute }}
+                    <br />
+                    <button class="btn btn-danger" v-on:click="remMute(mute)">remove</button>
+                  </li>
+                </ul>
+              </div>
+              <form @submit.prevent="addMutedWord()">
+                <div class="input-field">
+                  <input type="text" id="addMute" v-model="addMute" />
+                  <label class="black-text" for="addMute">mute a word</label>
+                </div>
+                <button type="submit" class="btn btn-primary float-right">
+                  <i class="material-icons">add</i>
+                </button>
+              </form>
+            </div>
             <div v-if="!isYou(email)">
               <button v-on:click="blockUser(email)" type="submit" class="btn btn-danger right">BLOCK</button>
               <button class="btn btn-danger right" v-on:click="alertDisplay(email)">Report</button>
@@ -45,7 +65,6 @@
                 }"
                 class="btn btn-primary"
               >Edit Profile</router-link>
-              <form @submit.prevent="mutedWords(email)"></form>
             </div>
             <div v-if="checkRequestBan()">You are banned from sending friend requests</div>
             <div v-if="checkFriendStat(email)">
@@ -147,7 +166,9 @@ export default {
       currentUser: false,
       isAdmin: false,
       currentUserDets: [],
-      bans: []
+      bans: [],
+      addMute: "",
+      mutes: []
     };
   },
   //when an instance of component is created
@@ -174,10 +195,12 @@ export default {
             pending: doc.data().pending,
             requests: doc.data().requests,
             bans: doc.data().bans,
-            role: doc.data().role
+            role: doc.data().role,
+            mutes: doc.data().muted
           };
           this.friends.push(doc.data().friends);
           this.pending.push(doc.data().pending);
+          this.mutes = data.mutes;
           this.bans = data.bans;
           if (data.role == "admin") {
             this.isAdmin = true;
@@ -302,6 +325,21 @@ export default {
             }
           });
         });
+    },
+    //adds the word typed in by the user to the muted words array
+    addMutedWord() {
+      let addWordToMute = db.collection("profiles").doc(this.email);
+      addWordToMute.update({
+        muted: firebase.firestore.FieldValue.arrayUnion(this.addMute)
+      });
+      this.addMute = "";
+    },
+    //removes the selected muted word from the list
+    remMute(mute) {
+      let remWord = db.collection("profiles").doc(this.email);
+      remWord.update({
+        muted: firebase.firestore.FieldValue.arrayRemove(mute)
+      });
     },
     //checks if the user is authorised - basically if the post belongs to them, allow them to delete it
     isAuthorised: function(id) {

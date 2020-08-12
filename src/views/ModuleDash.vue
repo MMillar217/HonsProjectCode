@@ -114,7 +114,6 @@
                         <li>{{ violation }}</li>
                       </ul>
                     </div>
-
                     <button v-on:click="showMsg(post)" class="btn btn-outline-danger">See Post</button>
                     <hr />
                     <div v-if="isAuthorised(post.user_id) || isAdmin">
@@ -126,27 +125,35 @@
                     </div>
                   </div>
                   <div v-if="!checkViolations(post.violations)">
-                    <h5>
-                      <router-link
-                        v-bind:to="{
+                    <div v-if="checkMuted(post.body)">
+                      <h5>Warning!</h5>
+                      <p>Post made by {{ post.posted_by }} contains at least one of your muted words</p>
+                      <br />
+                      <button v-on:click="showMsg(post)" class="btn btn-outline-danger">See Post</button>
+                    </div>
+                    <div v-if="!checkMuted(post.body)">
+                      <h5>
+                        <router-link
+                          v-bind:to="{
                           name: 'view-profile',
                           params: { user_id: post.user_id }
                         }"
-                      >{{ post.posted_by }}</router-link>
-                    </h5>
+                        >{{ post.posted_by }}</router-link>
+                      </h5>
 
-                    <br />
-                    {{ post.body }}
-                    <br />
-                    <!-- {{timeSince(post.posted.toDate())}} -->
-                    {{ post.posted.toDate() }}
-                    <hr />
-                    <div v-if="isAuthorised(post.user_id) || isAdmin">
-                      <button
-                        v-on:click="deleteStatus(post.id, post.body)"
-                        type="submit"
-                        class="btn btn-danger"
-                      >Delete</button>
+                      <br />
+                      {{ post.body }}
+                      <br />
+                      <!-- {{timeSince(post.posted.toDate())}} -->
+                      {{ post.posted.toDate() }}
+                      <hr />
+                      <div v-if="isAuthorised(post.user_id) || isAdmin">
+                        <button
+                          v-on:click="deleteStatus(post.id, post.body)"
+                          type="submit"
+                          class="btn btn-danger"
+                        >Delete</button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -240,7 +247,8 @@ export default {
       curRole: "",
       blocked: [],
       blocked_by: [],
-      bans: []
+      bans: [],
+      muted: []
     };
   },
   //when the instance is mounted to the app
@@ -417,6 +425,19 @@ export default {
         this.isAdmin = false;
       }
     },
+    //checks for muted words in post
+    checkMuted: function(post) {
+      let words = this.muted;
+      let sep = post.split(" ");
+
+      //loops through each word in the post to determine if the post contains any of the user's muted words
+      for (let i = 0; i < sep.length; i++) {
+        if (words.includes(sep[i])) {
+          return true;
+        }
+      }
+      return false;
+    },
     savePost() {
       const threshold = 0.5;
       toxicity.load(threshold).then(model => {
@@ -546,13 +567,14 @@ export default {
               role: doc.data().role,
               blocked: doc.data().blocked,
               blocked_by: doc.data().blocked_by,
-              bans: doc.data().bans
+              bans: doc.data().bans,
+              muted: doc.data().muted
             };
             this.curRole = data.role;
             this.blocked = data.blocked;
             this.blocked_by = data.blocked_by;
             this.bans = data.bans;
-
+            this.muted = data.muted;
             if (this.curRole === "admin" && this.isLoggedIn == true) {
               this.isAdmin = true;
             } else {

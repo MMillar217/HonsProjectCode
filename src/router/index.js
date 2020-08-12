@@ -6,10 +6,10 @@ import ViewProfile from "@/views/ViewProfile";
 import EditProfile from "@/views/EditProfile";
 import Login from "@/views/Login";
 import FindFriends from "@/views/FindFriends.vue";
-import StatUpdate from "@/views/StatUpdate.vue";
+//import StatUpdate from "@/views/StatUpdate.vue";
 import Message from "@/views/Message.vue";
 import Admin from "../views/Admin.vue";
-import ManageClasses from "@/views/ManageClasses.vue";
+//import ManageClasses from "@/views/ManageClasses.vue";
 import ModuleDash from "@/views/ModuleDash.vue";
 import firebase from "firebase";
 
