@@ -121,7 +121,7 @@ export default {
       curRole: "",
       classes: [],
       isLecturer: false,
-      isAdmin: false
+      isAdmin: false,
     };
   },
   created() {
@@ -152,12 +152,12 @@ export default {
       "https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"
     );
     document.head.appendChild(vjq);
-    $(document).ready(function() {
+    $(document).ready(function () {
       $(".sidenav").sidenav();
     });
   },
   methods: {
-    logout: function() {
+    logout: function () {
       firebase
         .auth()
         .signOut()
@@ -169,8 +169,8 @@ export default {
       db.collection("profiles")
         .where("email", "==", this.currentUser)
         .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
             const data = {
               id: doc.id,
               bio: doc.data().bio,
@@ -182,7 +182,7 @@ export default {
               pending: doc.data().pending,
               requests: doc.data().requests,
               classes: doc.data().classes,
-              role: doc.data().role
+              role: doc.data().role,
             };
             this.curRole = data.role;
             console.log(this.curRole);
@@ -221,8 +221,8 @@ export default {
       } else {
         return false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

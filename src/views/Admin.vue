@@ -69,7 +69,7 @@
                           <p>Reporting: {{ unresReport.reporting }}</p>
                           <p>Report Description: {{ unresReport.report_reason }}</p>
                           <p>Type: {{ unresReport.report_type }}</p>
-                          <p>Date of Report: {{ unresReport.report_made }}</p>
+                          <!-- <p>Date of Report: {{ unresReport.report_made }}</p> -->
                           <button
                             v-on:click="resolveReport(unresReport.id)"
                             class="btn btn-outline-success"
@@ -107,7 +107,7 @@
                           <p>Reporting: {{ resReport.reporting }}</p>
                           <p>Report Description: {{ resReport.report_reason }}</p>
                           <p>Type: {{ resReport.report_type }}</p>
-                          <p>Date of Report: {{ resReport.report_made }}</p>
+                          <!-- <p>Date of Report: {{ resReport.report_made }}</p> -->
                         </li>
                       </ul>
                     </div>

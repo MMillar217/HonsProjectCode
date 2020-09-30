@@ -177,7 +177,7 @@ export default {
       this.isLoggedIn = true;
       this.currentUser = firebase.auth().currentUser.email;
     }
-
+    this.mutes == "";
     //find current user details, in order to check if request has been sent
     db.collection("profiles")
       .where("email", "==", this.currentUser)
@@ -245,6 +245,7 @@ export default {
             vm.blocked_by = doc.data().blocked_by;
             vm.bans = doc.data().bans;
             vm.role = doc.data().role;
+            vm.mutes = doc.data().mutes;
           });
         });
       });
