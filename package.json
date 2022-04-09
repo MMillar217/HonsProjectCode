@@ -15,7 +15,7 @@
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.4",
     "firebase": "^7.2.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "sweetalert2": "^9.7.2",
     "vue": "^2.6.10",
     "vue-cli": "^2.9.6",
